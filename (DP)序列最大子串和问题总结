@@ -1,0 +1,46 @@
+//求最大子序列和
+#include<bits/stdc++.h>
+using namespace std;
+const int maxn = 1024;
+int main() {
+    int len;    cin >> len;
+    vector<int> arr(len),dp(len,0);//dp[index] 以位置index为结尾的最大子序列和
+    for(auto& num:arr)
+        cin >> num;
+    dp[0] = arr[0];
+    for(int i=1; i!=len; ++i)
+        dp[i] = max(arr[i],dp[i-1]+arr[i]);//要么重新开始一个子串，要么沿用
+    int maxValue = *max_element(dp.cbegin(),dp.cend());
+    cout << maxValue << endl;
+}
+
+//求最大子序列和并求出左端点和右端点
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    int len;    cin >> len;
+    vector<int> arr(len),dp(len),l(len,0),r(len,0);
+    bool flag = false;
+    for(auto& num:arr){
+        cin >> num;
+        if(num >= 0)
+            flag = true;
+    }
+    dp = arr;// 解释下： eg: dp[index] = max(dp[index-1] + arr[index],arr[index])
+             // 然而现在我们需要与dp[index-1] + arr[index] 进行比较以控制左右端点位置
+    for(int i=1; i!=len; ++i){
+        if(dp[i-1] + arr[i] >= dp[i] ){
+            dp[i] = dp[i-1] + arr[i];
+            l[i] = l[i-1];
+            r[i] = i;
+        }else
+            l[i] = r[i] = i;
+    }
+    int ans = dp[0],index = 0;
+    for(int i=1; i!=len; ++i)
+        if(dp[i] > ans){
+            ans = dp[i];
+            index = i;
+        }
+    cout << dp[index] << " " << l[index] << " " << r[index] << endl;
+}
